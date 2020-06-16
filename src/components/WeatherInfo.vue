@@ -6,7 +6,7 @@
     <div id="info" v-if="weatherInfo[0]">
       <p>Vädret i {{textfieldCity}},{{weatherInfo[0].sys.country}}</p>
       <p>Beskrivningen av dagens väder är {{weatherInfo[0].weather[0].description}}</p>
-      <p>Temperaturen i {{weatherInfo[0].name}} är {{weatherInfo[0].main.temp}} C</p>
+      <p>Temperaturen i {{weatherInfo[0].name}} är {{temp}} C</p>
       <p>Lägsta temperaturen idag är {{weatherInfo[0].main.temp_min}} C</p>
       <p>Det känns som {{weatherInfo[0].main.feels_like}} C</p>
       <p>Luften blåser {{weatherInfo[0].wind.speed}} meter per sekund</p>
@@ -31,8 +31,14 @@ export default {
       weatherInfo: []
     };
   },
+  computed: {
+    temp() {
+      return this.$store.state.storeWeatherInfo[0].main.temp;
+    }
+  },
   methods: {
     getData(city) {
+      console.log(this.$store.state.storeWeatherInfo);
       fetch(
         "http://api.openweathermap.org/data/2.5/weather?q=" +
           city +
@@ -47,8 +53,12 @@ export default {
           } else {
             this.weatherInfo = [];
             this.weatherInfo.push(data);
+            this.storeData();
           }
         });
+    },
+    storeData() {
+      this.$store.state.storeWeatherInfo = this.weatherInfo;
     }
   }
 };
