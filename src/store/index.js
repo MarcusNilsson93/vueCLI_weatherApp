@@ -7,7 +7,11 @@ export default new Vuex.Store({
   state: {
     storeWeatherInfo: []
   },
-  mutations: {},
+  mutations: {
+    saveWeather(state, weather) {
+      state.storeWeatherInfo = weather
+    }
+  },
   actions: {
 
   },

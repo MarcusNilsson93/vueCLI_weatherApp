@@ -6,7 +6,7 @@
     <div id="info" v-if="weatherInfo[0]">
       <p>Vädret i {{textfieldCity}},{{weatherInfo[0].sys.country}}</p>
       <p>Beskrivningen av dagens väder är {{weatherInfo[0].weather[0].description}}</p>
-      <p>Temperaturen i {{weatherInfo[0].name}} är {{temp}} C</p>
+      <p>Temperaturen i {{weatherInfo[0].name}} är {{storeWeatherInfo}} C</p>
       <p>Lägsta temperaturen idag är {{weatherInfo[0].main.temp_min}} C</p>
       <p>Det känns som {{weatherInfo[0].main.feels_like}} C</p>
       <p>Luften blåser {{weatherInfo[0].wind.speed}} meter per sekund</p>
@@ -32,8 +32,13 @@ export default {
     };
   },
   computed: {
-    temp() {
-      return this.$store.state.storeWeatherInfo[0].main.temp;
+    storeWeatherInfo: {
+      get() {
+        return this.$store.state.storeWeatherInfo;
+      },
+      set(weatherInfo) {
+        this.$store.commit("saveWeather", weatherInfo);
+      }
     }
   },
   methods: {
@@ -53,12 +58,9 @@ export default {
           } else {
             this.weatherInfo = [];
             this.weatherInfo.push(data);
-            this.storeData();
+            this.$store.commit("saveWeather", data.main.temp);
           }
         });
-    },
-    storeData() {
-      this.$store.state.storeWeatherInfo = this.weatherInfo;
     }
   }
 };
